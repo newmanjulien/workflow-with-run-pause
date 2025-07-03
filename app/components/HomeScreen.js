@@ -2,7 +2,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Plus, ArrowRight, Trash2, Calendar, Sparkles, User } from 'lucide-react';
+import { Plus, ArrowRight, Trash2, Calendar, Sparkles, User, Play, Pause } from 'lucide-react';
 
 const HomeScreen = ({ onNavigateToWorkflow, onCreateNew }) => {
   const [workflows, setWorkflows] = useState([]);
