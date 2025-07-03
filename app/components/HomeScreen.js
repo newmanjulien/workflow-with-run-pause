@@ -57,6 +57,40 @@ const HomeScreen = ({ onNavigateToWorkflow, onCreateNew }) => {
     }
   };
 
+  const handleToggleWorkflowStatus = async (workflowId, currentStatus) => {
+    setUpdatingStatus(workflowId);
+    
+    try {
+      const response = await fetch(`/api/workflows/${workflowId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isRunning: !currentStatus
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // Update the local state
+        setWorkflows(workflows.map(w => 
+          w.id === workflowId 
+            ? { ...w, isRunning: !currentStatus }
+            : w
+        ));
+      } else {
+        alert('Error updating workflow status: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Status update error:', error);
+      alert('Error updating workflow status: ' + error.message);
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
+  
   const formatDate = (dateString) => {
     if (!dateString) return 'Unknown';
     
