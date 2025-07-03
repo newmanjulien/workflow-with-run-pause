@@ -20,6 +20,7 @@ export async function saveWorkflow(workflowData) {
     const docRef = await addDoc(collection(db, WORKFLOWS_COLLECTION), {
       title: workflowData.title,
       steps: workflowData.steps,
+      isRunning: false,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     });
