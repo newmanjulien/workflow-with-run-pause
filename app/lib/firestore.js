@@ -101,3 +101,18 @@ export async function deleteWorkflow(id) {
     return { success: false, error: error.message };
   }
 }
+
+export async function updateWorkflowStatus(id, isRunning) {
+  try {
+    const docRef = doc(db, WORKFLOWS_COLLECTION, id);
+    await updateDoc(docRef, {
+      isRunning: isRunning,
+      updatedAt: serverTimestamp()
+    });
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating workflow status:', error);
+    return { success: false, error: error.message };
+  }
+}
