@@ -90,7 +90,7 @@ const HomeScreen = ({ onNavigateToWorkflow, onCreateNew }) => {
       setUpdatingStatus(null);
     }
   };
-  
+
   const formatDate = (dateString) => {
     if (!dateString) return 'Unknown';
     
@@ -174,10 +174,29 @@ const HomeScreen = ({ onNavigateToWorkflow, onCreateNew }) => {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
-                    {/* Workflow Title */}
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 truncate">
-                      {workflow.title}
-                    </h3>
+                    {/* Workflow Title and Status */}
+                    <div className="flex items-center space-x-3 mb-2">
+                      <h3 className="text-lg font-semibold text-gray-900 truncate">
+                        {workflow.title}
+                      </h3>
+                      <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
+                        workflow.isRunning 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {workflow.isRunning ? (
+                          <>
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span>Running</span>
+                          </>
+                        ) : (
+                          <>
+                            <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                            <span>Paused</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
                     
                     {/* Steps Summary */}
                     <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
@@ -214,6 +233,37 @@ const HomeScreen = ({ onNavigateToWorkflow, onCreateNew }) => {
 
                   {/* Action Buttons */}
                   <div className="flex items-center space-x-2 ml-4">
+                    {/* Run/Pause Button */}
+                    <button
+                      onClick={() => handleToggleWorkflowStatus(workflow.id, workflow.isRunning)}
+                      disabled={updatingStatus === workflow.id}
+                      className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-colors font-medium text-sm ${
+                        updatingStatus === workflow.id
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : workflow.isRunning
+                          ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                          : 'bg-green-100 text-green-700 hover:bg-green-200'
+                      }`}
+                    >
+                      {updatingStatus === workflow.id ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+                          <span>Updating...</span>
+                        </>
+                      ) : workflow.isRunning ? (
+                        <>
+                          <Pause className="w-4 h-4" />
+                          <span>Pause</span>
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-4 h-4" />
+                          <span>Run</span>
+                        </>
+                      )}
+                    </button>
+                    
+                    {/* Edit Button */}
                     <button
                       onClick={() => onNavigateToWorkflow(workflow.id)}
                       className="flex items-center space-x-1 px-3 py-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors"
@@ -222,6 +272,7 @@ const HomeScreen = ({ onNavigateToWorkflow, onCreateNew }) => {
                       <ArrowRight className="w-4 h-4" />
                     </button>
                     
+                    {/* Delete Button */}
                     <button
                       onClick={() => handleDeleteWorkflow(workflow.id, workflow.title)}
                       disabled={isDeleting === workflow.id}
