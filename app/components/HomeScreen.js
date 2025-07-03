@@ -8,6 +8,7 @@ const HomeScreen = ({ onNavigateToWorkflow, onCreateNew }) => {
   const [workflows, setWorkflows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(null);
+  const [updatingStatus, setUpdatingStatus] = useState(null);
 
   useEffect(() => {
     loadWorkflows();
